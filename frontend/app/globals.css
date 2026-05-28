@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-inter: 'Inter', system-ui, sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  @apply bg-surface-page text-ink antialiased;
+}
+
+/* Exam-paper sheet look. */
+.paper-sheet {
+  @apply bg-white shadow-card ring-1 ring-surface-border rounded-xl;
+}
+
+/* Loading shimmer used in skeletons. */
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Hide the dashboard chrome when printing the paper. */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

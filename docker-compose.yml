@@ -1,0 +1,80 @@
+# ============================================================
+# VedaAI — Local infrastructure + backend
+#
+#   docker compose up -d mongo redis      # just infra (run apps locally)
+#   docker compose up --build             # infra + backend
+#
+# The frontend is intentionally run locally (`npm run dev` in /frontend)
+# for the fastest DX, but a production Dockerfile is included for it too.
+#
+# Host ports are overridable so VedaAI doesn't clash with other local
+# services. If 6379/27017 are already taken, set REDIS_PORT_HOST /
+# MONGO_PORT_HOST in the root .env (and match REDIS_PORT in backend/.env
+# when running the backend outside Docker).
+# ============================================================
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: vedaai-mongo
+    restart: unless-stopped
+    ports:
+      - "${MONGO_PORT_HOST:-27017}:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: vedaai-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "${REDIS_PORT_HOST:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: vedaai-backend
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
+      MONGO_URI: mongodb://mongo:27017/vedaai
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      AI_PROVIDER: ${AI_PROVIDER:-mock}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
+      AI_MAX_VALIDATION_RETRIES: ${AI_MAX_VALIDATION_RETRIES:-2}
+      STORAGE_DIR: /app/storage
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost:4000}
+    ports:
+      - "4000:4000"
+    volumes:
+      - backend_storage:/app/storage
+
+volumes:
+  mongo_data:
+  redis_data:
+  backend_storage:

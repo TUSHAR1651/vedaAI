@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(git --version)",
+      "Bash(npm install *)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(node dist/main.js)",
+      "Bash(echo \"started pid $!\")",
+      "Bash(npm run *)",
+      "Bash(echo \"BUILD_EXIT:$?\")",
+      "Read(//private/tmp/**)",
+      "Bash(pkill -f \"node dist/main.js\")",
+      "Bash(npx tsc *)",
+      "Bash(echo \"FE_TSC_EXIT:$?\")",
+      "Bash(echo \"BE_TSC_EXIT:$?\")",
+      "Bash(docker rm *)",
+      "Bash(echo \"started next dev \\(pid $!\\)\")",
+      "Bash(grep -q \"Ready in\" /tmp/vedaai-fe-dev.log)",
+      "Bash(break)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(echo \"started \\(pid $!\\)\")",
+      "Bash(pkill -f \"next-server\")",
+      "Bash(node -e \"console.log\\('cwd:', process.cwd\\(\\)\\); require\\('dotenv'\\).config\\(\\); console.log\\('AI_PROVIDER:', process.env.AI_PROVIDER\\); console.log\\('GEMINI key set:', !!process.env.GEMINI_API_KEY\\);\")",
+      "Bash(lsof -nP -iTCP:4000 -sTCP:LISTEN)",
+      "Bash(pkill -9 -f \"node dist/main.js\")",
+      "Bash(pkill -9 -f vedaai)",
+      "Bash(kill -9 41603)",
+      "Bash(python3 -c ' *)"
+    ]
+  }
+}

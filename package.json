@@ -1,0 +1,20 @@
+{
+  "name": "vedaai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "VedaAI — full-stack AI Assessment Creator (NestJS + Next.js monorepo)",
+  "scripts": {
+    "install:all": "npm install --prefix backend && npm install --prefix frontend",
+    "infra:up": "docker compose up -d mongo redis",
+    "infra:down": "docker compose down",
+    "dev:backend": "npm run start:dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "build:backend": "npm run build --prefix backend",
+    "build:frontend": "npm run build --prefix frontend",
+    "build": "npm run build:backend && npm run build:frontend",
+    "docker:up": "docker compose up --build"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
