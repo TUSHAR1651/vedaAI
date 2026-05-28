@@ -22,7 +22,9 @@ import { QueueProducer } from './queue.producer';
           connection: {
             host: redis.host,
             port: redis.port,
+            username: redis.username,
             password: redis.password,
+            tls: redis.tls,
           },
           defaultJobOptions: DEFAULT_JOB_OPTS,
         };

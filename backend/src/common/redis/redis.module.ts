@@ -21,7 +21,9 @@ export { REDIS_CLIENT };
         return new Redis({
           host: redis.host,
           port: redis.port,
+          username: redis.username,
           password: redis.password,
+          tls: redis.tls,
           maxRetriesPerRequest: null,
           lazyConnect: false,
         });
